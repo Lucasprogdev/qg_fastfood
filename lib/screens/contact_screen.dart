@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactScreen extends StatelessWidget {
   const ContactScreen({super.key});
+
+  Future<void> _launch(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +18,7 @@ class ContactScreen extends StatelessWidget {
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 140),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -67,69 +75,72 @@ class ContactScreen extends StatelessWidget {
   }
 
   Widget _buildMap() {
-    return Container(
-      height: 180,
-      decoration: BoxDecoration(
-        color: const Color(0xFF111111),
-        border: Border.all(color: const Color(0x33FF6B1A)),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [Color(0xFF1A1A1A), Color(0xFF111111)],
+    return GestureDetector(
+      onTap: () => _launch('https://maps.google.com/?q=10+Rue+des+Bains+67700+Saverne'),
+      child: Container(
+        height: 180,
+        decoration: BoxDecoration(
+          color: const Color(0xFF111111),
+          border: Border.all(color: const Color(0x33FF6B1A)),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                    colors: [Color(0xFF1A1A1A), Color(0xFF111111)],
+                  ),
                 ),
               ),
-            ),
-            CustomPaint(
-              size: const Size(double.infinity, 180),
-              painter: _GridPainter(),
-            ),
-            const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('📍', style: TextStyle(fontSize: 40)),
-                  SizedBox(height: 4),
-                  Text(
-                    'QG Fastfood',
+              CustomPaint(
+                size: const Size(double.infinity, 180),
+                painter: _GridPainter(),
+              ),
+              const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('📍', style: TextStyle(fontSize: 40)),
+                    SizedBox(height: 4),
+                    Text(
+                      'QG Fastfood',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      '10 Rue des Bains, Saverne',
+                      style: TextStyle(color: Color(0xFF999999), fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                bottom: 12,
+                right: 12,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFF6B1A),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: const Text(
+                    '🗺️  Ouvrir Maps',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
-                  Text(
-                    '10 Rue des Bains, Saverne',
-                    style: TextStyle(color: Color(0xFF999999), fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: 12,
-              right: 12,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFF6B1A),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: const Text(
-                  '🗺️  Ouvrir Maps',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -143,7 +154,10 @@ class ContactScreen extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: _infoCard('📞', 'Téléphone', '07 68 28 57 92'),
+          child: GestureDetector(
+            onTap: () => _launch('tel:0768285792'),
+            child: _infoCard('📞', 'Téléphone', '07 68 28 57 92'),
+          ),
         ),
       ],
     );
@@ -269,42 +283,48 @@ class ContactScreen extends StatelessWidget {
   Widget _buildActionButtons(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          width: double.infinity,
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFF6B1A),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: const Center(
-              child: Text(
-                '📞  Appeler — 07 68 28 57 92',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
+        GestureDetector(
+          onTap: () => _launch('tel:0768285792'),
+          child: SizedBox(
+            width: double.infinity,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF6B1A),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: const Center(
+                child: Text(
+                  '📞  Appeler — 07 68 28 57 92',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ),
           ),
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white24),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: const Center(
-              child: Text(
-                '🗺️  Ouvrir dans Google Maps',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
+        GestureDetector(
+          onTap: () => _launch('https://maps.google.com/?q=10+Rue+des+Bains+67700+Saverne'),
+          child: SizedBox(
+            width: double.infinity,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white24),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: const Center(
+                child: Text(
+                  '🗺️  Ouvrir dans Google Maps',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ),
@@ -315,49 +335,52 @@ class ContactScreen extends StatelessWidget {
   }
 
   Widget _buildSocial() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF111111),
-        border: Border.all(color: Colors.white.withOpacity(0.07)),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          const Text('📷', style: TextStyle(fontSize: 28)),
-          const SizedBox(width: 14),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Suivez-nous sur Instagram',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
-                ),
-                Text(
-                  '@qg_fastfood_france',
-                  style: TextStyle(color: Color(0xFFFF6B1A), fontSize: 13),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: const Color(0x26FF6B1A),
-              border: Border.all(color: const Color(0x4DFF6B1A)),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: const Text(
-              'Suivre',
-              style: TextStyle(
-                color: Color(0xFFFF6B1A),
-                fontWeight: FontWeight.w700,
-                fontSize: 13,
+    return GestureDetector(
+      onTap: () => _launch('https://www.instagram.com/qg_fastfood_france'),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFF111111),
+          border: Border.all(color: Colors.white.withOpacity(0.07)),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            const Text('📷', style: TextStyle(fontSize: 28)),
+            const SizedBox(width: 14),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Suivez-nous sur Instagram',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
+                  ),
+                  Text(
+                    '@qg_fastfood_france',
+                    style: TextStyle(color: Color(0xFFFF6B1A), fontSize: 13),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0x26FF6B1A),
+                border: Border.all(color: const Color(0x4DFF6B1A)),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: const Text(
+                'Suivre',
+                style: TextStyle(
+                  color: Color(0xFFFF6B1A),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

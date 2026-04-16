@@ -26,6 +26,9 @@ class QGFastfoodApp extends StatelessWidget {
       title: 'QG Fastfood',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        splashFactory: NoSplash.splashFactory,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         fontFamily: 'Outfit',
         scaffoldBackgroundColor: const Color(0xFF0A0A0A),
         colorScheme: const ColorScheme.dark(
@@ -59,7 +62,10 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: _screens[_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 28),
         child: ClipRRect(
