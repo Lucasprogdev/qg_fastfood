@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final void Function(int index) onNavigate;
+
+  const HomeScreen({super.key, required this.onNavigate});
+
+  Future<void> _launch(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +110,7 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () => onNavigate(1), // → Menu
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         decoration: BoxDecoration(
@@ -123,7 +133,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () => onNavigate(3), // → Contact
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         decoration: BoxDecoration(
@@ -461,21 +471,24 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 10),
           _ctaCard('📞', '07 68 28 57 92', 'Commande & Info'),
           const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: const Center(
-                child: Text(
-                  '📞  Appeler pour commander',
-                  style: TextStyle(
-                    color: Color(0xFFFF6B1A),
-                    fontWeight: FontWeight.w800,
-                    fontSize: 15,
+          GestureDetector(
+            onTap: () => _launch('tel:0768285792'),
+            child: SizedBox(
+              width: double.infinity,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: const Center(
+                  child: Text(
+                    '📞  Appeler pour commander',
+                    style: TextStyle(
+                      color: Color(0xFFFF6B1A),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 15,
+                    ),
                   ),
                 ),
               ),
@@ -538,28 +551,38 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Row(
-            children: ['📷', '🗺️', '📞'].map((icon) {
-              return Container(
-                margin: const EdgeInsets.only(right: 10),
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1A),
-                  border: Border.all(color: Colors.white12),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Center(child: Text(icon, style: const TextStyle(fontSize: 18))),
-              );
-            }).toList(),
+            children: [
+              _footerIcon('📷', () => _launch('https://www.instagram.com/qg_fastfood_france')),
+              const SizedBox(width: 10),
+              _footerIcon('🗺️', () => _launch('https://maps.google.com/?q=10+Rue+des+Bains+67700+Saverne')),
+              const SizedBox(width: 10),
+              _footerIcon('📞', () => _launch('tel:0768285792')),
+            ],
           ),
           const SizedBox(height: 20),
           const Divider(color: Colors.white12),
           const SizedBox(height: 12),
           const Text(
-            '© 2025 QG Fastfood France — Tous droits réservés',
+            '© 2026 QG Fastfood France — Tous droits réservés',
             style: TextStyle(color: Color(0xFF999999), fontSize: 12),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _footerIcon(String emoji, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 42,
+        height: 42,
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A1A),
+          border: Border.all(color: Colors.white12),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Center(child: Text(emoji, style: const TextStyle(fontSize: 18))),
       ),
     );
   }

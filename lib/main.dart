@@ -51,20 +51,24 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    MenuScreen(),
-    ReviewsScreen(),
-    ContactScreen(),
-  ];
+  void _navigateTo(int index) {
+    setState(() => _currentIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> screens = [
+      HomeScreen(onNavigate: _navigateTo),
+      const MenuScreen(),
+      const ReviewsScreen(),
+      const ContactScreen(),
+    ];
+
     return Scaffold(
       extendBody: true,
       body: IndexedStack(
         index: _currentIndex,
-        children: _screens,
+        children: screens,
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 28),
@@ -90,7 +94,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               child: BottomNavigationBar(
                 currentIndex: _currentIndex,
-                onTap: (index) => setState(() => _currentIndex = index),
+                onTap: _navigateTo,
                 backgroundColor: Colors.transparent,
                 selectedItemColor: const Color(0xFFFF6B1A),
                 unselectedItemColor: Colors.white38,
