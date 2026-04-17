@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358925655292",
+    "project_id": "qg-fastfood-11f43",
+    "storage_bucket": "qg-fastfood-11f43.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358925655292:android:369c515d40187045090b79",
+        "android_client_info": {
+          "package_name": "com.example.qg_fastfood"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5gmk4DQfsbAl9JC8XwxY_ood8noO4crs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
